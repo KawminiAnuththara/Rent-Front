@@ -1,8 +1,12 @@
 import React from 'react'
 
+import AdminPage from './components/adminPage';
+
 const App = () => {
   return (
-    <div className='border bg-amber-200'>App</div>
+    <div>
+      <AdminPage/>
+    </div>
   )
 }
 
