@@ -22,7 +22,7 @@ export default function Header() {
         Items
       </Link>
       <Link to="/error" className="text-[25px] font-bold m-1">
-        error
+        
       </Link>
     </header>
   );
