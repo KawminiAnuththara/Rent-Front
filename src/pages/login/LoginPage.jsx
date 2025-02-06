@@ -23,6 +23,8 @@ const LoginPage = () => {
       toast.success("login successfully");
 
       const user = res.data.user;
+      localStorage.setItem("token",res.data.token);
+
       if(user.role === "admin"){      //user role is equal admin the redirect to the admin page
         navigate("/admin/")
       }else{
