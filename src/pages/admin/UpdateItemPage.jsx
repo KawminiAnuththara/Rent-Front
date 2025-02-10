@@ -1,18 +1,22 @@
 import axios from "axios";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
-const AddItemsPage = () => {
-  const [productKey, setProductKey] = useState("");
-  const [productName, setProductName] = useState("");
-  const [productPrice, setProductPrice] = useState(0);
-  const [productCategory, setProductCategory] = useState("audio");
-  const [productDimension, setProductDimension] = useState("");
-  const [productDescription, setProductDescription] = useState("");
-  const [productAvailability, setProductAvailability] = useState(true); // New field for availability
-  const [productImages, setProductImages] = useState([""]); // New field for images
+const UpdateItemsPage = () => {
+
+  const location= useLocation();
+
+  const [productKey, setProductKey] = useState(location.state.key);
+  const [productName, setProductName] = useState(location.state.key);
+  const [productPrice, setProductPrice] = useState(location.state.price);
+  const [productCategory, setProductCategory] = useState(location.state.category);
+  const [productDimension, setProductDimension] = useState(location.state.dimensions);
+  const [productDescription, setProductDescription] = useState(location.state.dimensions);
+  const [productAvailability, setProductAvailability] = useState(location.state.availability);
+  const [productImages, setProductImages] = useState(location.state.image); 
   const navigate = useNavigate();
+  
 
   async function handleAddItem() {
     console.log(
@@ -30,10 +34,10 @@ const AddItemsPage = () => {
 
     if (token) {
       try {
-        const result = await axios.post(
-          "http://localhost:3000/api/products",
+        const result = await axios.put(
+          "http://localhost:3000/api/products/"+productKey,
           {
-            key: productKey,
+            
             name: productName,
             price: productPrice,
             category: productCategory,
@@ -65,9 +69,10 @@ const AddItemsPage = () => {
 
   return (
     <div className="w-full h-full flex flex-col items-center">
-      <h1>Add Items</h1>
+      <h1>Update Item</h1>
       <div className="w-[400px] border flex flex-col items-center p-4">
         <input
+          disabled
           type="text"
           placeholder="Product Key"
           value={productKey}
@@ -129,7 +134,7 @@ const AddItemsPage = () => {
           onClick={handleAddItem}
           className="bg-blue-500 text-white p-2 w-full mt-2"
         >
-          Add
+          Update Item
         </button>
         <button onClick={() => { navigate("/admin/items/add") }} className="bg-red-500 text-white p-2 w-full mt-2">
           Cancel
@@ -139,4 +144,4 @@ const AddItemsPage = () => {
   );
 };
 
-export default AddItemsPage;
+export default UpdateItemsPage;

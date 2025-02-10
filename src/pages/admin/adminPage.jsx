@@ -5,6 +5,7 @@ import { VscCodeReview } from "react-icons/vsc";
 import { Link, Route, Routes } from "react-router-dom";
 import AdminItemPage from "./AdminItemPage";
 import AddItemsPage from "./AddItemPage";
+import UpdateItemPage from "./UpdateItemPage";
 
 export default function AdminPage(){
     return(
@@ -32,6 +33,7 @@ export default function AdminPage(){
            <Route path="/booking" element={<h1>Booking</h1>}/>
            <Route path="/items" element={<AdminItemPage/>}/>
            <Route path="/item/add" element={<AddItemsPage/>}/>
+           <Route path="/item/edit" element={<UpdateItemPage/>}/>
          </Routes>
       </div>
 

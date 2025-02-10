@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { CiCirclePlus } from "react-icons/ci";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-const sampleArray = [
+/* const sampleArray = [
   {
     key: "product123",
     name: "Example Product 1",
@@ -21,7 +22,7 @@ const sampleArray = [
     category: "audio",
     description: "A great product 2",
     availability: false,
-    image: ["image2.jpg", ],
+    image: ["image2.jpg"],
   },
   {
     key: "product125",
@@ -33,49 +34,115 @@ const sampleArray = [
     availability: true,
     image: ["image3.jpg"],
   },
-];
+]; */
 
-const AdminItemPage = () => {
+function AdminItemPage() {
+  const [items, setItems] = useState([]);
+  const [itemsLoaded, setItemsLoaded] = useState(false);
+  const navigate = useNavigate();
 
-  const [items,setItems]=useState(sampleArray);
+  useEffect(() => {
+    if(!itemsLoaded){
+      const token = localStorage.getItem("token");
+    axios
+      .get("http://localhost:3000/api/products", {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((res) => {
+        setItems(res.data);
+        setItemsLoaded(true);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    }
+  }, [itemsLoaded  ]);
+
+  const handleDelete = (key) => {
+    if(window.confirm("Are you sure you want to delete this items?")){
+    setItems(items.filter((item) => item.key !== key));
+
+    const token = localStorage.getItem("token");
+    axios.delete(`http://localhost:3000/api/products/${key}`,{
+      headers:{Authorization:`Bearer ${token}`},
+    }).then(
+      (res)=>{
+        console.log(res.data);
+        setItemsLoaded(!itemsLoaded);
+      }
+    ).catch(
+      (err)=>{
+        console.error(err);
+      }
+    )
+    }
+  };
+
   return (
-    <div className="w-full  h-full relative">
-      <table>
+    <div className="w-full h-full p-5 relative flex items-center flex-col">
+      {!itemsLoaded &&<div className="border-4 my-4  w-[100px] h-[100px]  border-b-green-600 rounded-full animate-spin "></div>}
+      {itemsLoaded &&<div className="overflow-x-auto">
+      <table className="w-full border-collapse border border-gray-300 text-left">
         <thead>
-          <tr>
-            <th>Product Key</th>
-            <th>Product Name</th>
-            <th>Price</th>
-            <th>Dimensions</th>
-            <th>Category</th>
-            <th>Availability</th>
-            <th>Images</th>
+          <tr className="bg-gray-200">
+            <th className="border border-gray-300 p-2">Product Key</th>
+            <th className="border border-gray-300 p-2">Product Name</th>
+            <th className="border border-gray-300 p-2">Price</th>
+            <th className="border border-gray-300 p-2">Dimensions</th>
+            <th className="border border-gray-300 p-2">Category</th>
+            <th className="border border-gray-300 p-2">Availability</th>
+            <th className="border border-gray-300 p-2">Images</th>
+            <th className="border border-gray-300 p-2">Actions</th>
           </tr>
         </thead>
         <tbody>
-          {
-             items.map((product)=>{
-                console.log(product);
-                return(
-                  <tr key={product.key}>
-                    <td>{product.key}</td>
-                    <td>{product.name}</td>
-                    <td>{product.price}</td>
-                    <td>{product.category}</td>
-                    <td>{product.dimensions}</td>
-                    <td>{product.availability}</td>
-                    <td>{product.image}</td>
-                  </tr>
-                )
-             })
-          }
+          {items.map((product) => (
+            <tr key={product.key} className="hover:bg-gray-100">
+              <td className="border border-gray-300 p-2">{product.key}</td>
+              <td className="border border-gray-300 p-2">{product.name}</td>
+              <td className="border border-gray-300 p-2">${product.price}</td>
+              <td className="border border-gray-300 p-2">{product.dimensions}</td>
+              <td className="border border-gray-300 p-2">{product.category}</td>
+              <td className="border border-gray-300 p-2">
+                <span
+                   className={`px-2 py-1 rounded text-sm font-medium ${
+                           product.availability
+                           ?"bg-green-100 text-green-700"
+                           :"bg-red-100 text-red-700"}`}
+                >
+                {product.availability ? "Available" : "Out of Stock"}
+                </span>
+              </td>
+              <td className="border border-gray-300 p-2">
+                {product.image.map((img, index) => (
+                  <img key={index} src={img} alt="product" className="w-10 h-10 inline-block mx-1" />
+                ))}
+              </td>
+              <td className="border border-gray-300 p-2 flex gap-2">
+                <button
+                 onClick={()=>{
+                  navigate(`/admin/item/edit`,{state:product})
+                 }}
+                 className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-700">
+                  Edit
+                </button>
+                <button
+                  onClick={() => handleDelete(product.key)}
+                  className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-700"
+                >
+                  Delete
+                </button>
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
-      <Link to="/admin/item/add">
-        <CiCirclePlus className="text-[50px] right-2 bottom-2 absolute hover:text-red-900 cursor-pointer" />
+      </div>}
+      <Link to="/admin/item/add" className="fixed bottom-4 right-4">
+        <CiCirclePlus className="text-[50px] text-green-600 hover:text-green-800 cursor-pointer" />
       </Link>
     </div>
   );
-};
+}
 
 export default AdminItemPage;
