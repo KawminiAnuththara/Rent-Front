@@ -31,11 +31,12 @@ const UpdateItemsPage = () => {
     );
 
     const token = localStorage.getItem("token");
+    const backendUrl = import.meta.env.VITE_BACKEND_URL
 
     if (token) {
       try {
         const result = await axios.put(
-          "http://localhost:3000/api/products/"+productKey,
+          `${backendUrl}/api/products/${productKey}`,
           {
             
             name: productName,

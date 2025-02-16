@@ -63,7 +63,9 @@ function AdminItemPage() {
     setItems(items.filter((item) => item.key !== key));
 
     const token = localStorage.getItem("token");
-    axios.delete(`http://localhost:3000/api/products/${key}`,{
+    const backendUrl = import.meta.env.VITE_BACKEND_URL
+
+    axios.delete(`${backendUrl}/api/products/${key}`,{
       headers:{Authorization:`Bearer ${token}`},
     }).then(
       (res)=>{

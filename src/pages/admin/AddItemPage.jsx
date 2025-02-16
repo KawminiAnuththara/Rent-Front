@@ -27,11 +27,12 @@ const AddItemsPage = () => {
     );
 
     const token = localStorage.getItem("token");
+    const backendUrl = import.meta.env.VITE_BACKEND_URL
 
     if (token) {
       try {
         const result = await axios.post(
-          "http://localhost:3000/api/products",
+          `${backendUrl}/api/products`,
           {
             key: productKey,
             name: productName,
