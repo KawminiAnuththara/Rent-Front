@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
+import mediaUpload from "../../utils/MediaUpload";
 
 const UpdateItemsPage = () => {
 
@@ -19,6 +20,20 @@ const UpdateItemsPage = () => {
   
 
   async function handleAddItem() {
+
+    let updatingImages = location.state.images
+
+    if(productImages.length >0){
+      const promises = [];
+
+      for(let i=0; i<productImages.length;i++){
+        console.log(productImages[i]);
+        const promise = mediaUpload(productImages[i]);
+        promises.push(promise);
+      }
+
+      const imageUrls = await Promise.all(promises);
+    }
     console.log(
       productKey,
       productName,
@@ -42,10 +57,10 @@ const UpdateItemsPage = () => {
             name: productName,
             price: productPrice,
             category: productCategory,
-            dimensions: productDimension,  // Corrected field name to match schema
+            dimensions: productDimension,  
             description: productDescription,
             availability: productAvailability,
-            image: productImages,  // Sending image data
+            image: updatingImages,  
           },
           {
             headers: {
@@ -125,10 +140,9 @@ const UpdateItemsPage = () => {
           />
         </div>
         <input
-          type="text"
-          placeholder="Product Image URL"
-          value={productImages[0]}
-          onChange={(e) => setProductImages([e.target.value])}
+          type="file"
+          multiple
+          onChange={(e) => setProductImages([e.target.files])}
           className="border p-2 mb-2 w-full"
         />
         <button

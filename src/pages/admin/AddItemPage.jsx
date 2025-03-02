@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import mediaUpload from "../../utils/MediaUpload";
 
 const AddItemsPage = () => {
   const [productKey, setProductKey] = useState("");
@@ -11,26 +12,26 @@ const AddItemsPage = () => {
   const [productDimension, setProductDimension] = useState("");
   const [productDescription, setProductDescription] = useState("");
   const [productAvailability, setProductAvailability] = useState(true); // New field for availability
-  const [productImages, setProductImages] = useState([""]); // New field for images
+  const [productImages, setProductImages] = useState([""]);
+  
   const navigate = useNavigate();
 
   async function handleAddItem() {
-    console.log(
-      productKey,
-      productName,
-      productPrice,
-      productCategory,
-      productDimension,
-      productDescription,
-      productAvailability,
-      productImages
-    );
-
-    const token = localStorage.getItem("token");
-    const backendUrl = import.meta.env.VITE_BACKEND_URL
-
-    if (token) {
-      try {
+    const promises = [];
+  
+    // Upload all images
+    for (let i = 0; i < productImages.length; i++) {
+      const promise = mediaUpload(productImages[i]);  // Assumes mediaUpload handles file upload
+      promises.push(promise);
+    }
+  
+    try {
+      // Wait for all promises to resolve (file uploads)
+      const imageUrls = await Promise.all(promises);
+      const token = localStorage.getItem("token");
+      const backendUrl = import.meta.env.VITE_BACKEND_URL;
+  
+      if (token) {
         const result = await axios.post(
           `${backendUrl}/api/products`,
           {
@@ -38,31 +39,33 @@ const AddItemsPage = () => {
             name: productName,
             price: productPrice,
             category: productCategory,
-            dimensions: productDimension,  // Corrected field name to match schema
+            dimensions: productDimension,
             description: productDescription,
             availability: productAvailability,
-            image: productImages,  // Sending image data
+            image: imageUrls, // Send the image URLs from the file upload responses
           },
           {
             headers: {
-              Authorization: "Bearer " + token, // Fixed missing space
+              Authorization: "Bearer " + token, // Add token in headers for authorization
             },
           }
         );
+  
         toast.success(result.data.message);
-        navigate("/admin/items");
-      } catch (err) {
-        console.error("Error adding item:", err);
-        if (err.response && err.response.data && err.response.data.error) {
-          toast.error(err.response.data.error);
-        } else {
-          toast.error("An error occurred while adding the product.");
-        }
+        navigate("/admin/items"); // Redirect after successful submission
+      } else {
+        toast.error("Please login first");
       }
-    } else {
-      toast.error("Please login first");
+    } catch (err) {
+      console.error("Error adding item:", err);
+      if (err.response && err.response.data && err.response.data.error) {
+        toast.error(err.response.data.error);
+      } else {
+        toast.error("An error occurred while adding the product.");
+      }
     }
   }
+  
 
   return (
     <div className="w-full h-full flex flex-col items-center">
@@ -120,10 +123,9 @@ const AddItemsPage = () => {
           />
         </div>
         <input
-          type="text"
-          placeholder="Product Image URL"
-          value={productImages[0]}
-          onChange={(e) => setProductImages([e.target.value])}
+          type="file"
+          multiple
+          onChange={(e) => setProductImages([e.target.files])}
           className="border p-2 mb-2 w-full"
         />
         <button

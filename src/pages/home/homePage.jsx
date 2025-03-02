@@ -6,6 +6,7 @@ import Contact from './Contact';
 import Gallery from './Gallery';
 import Items from './Items';
 import Error from './Error';
+import ProductOverview from './ProductOverview';
 
 const HomePage = () => {
   return (
@@ -17,6 +18,7 @@ const HomePage = () => {
           <Route path="/contact" element={<Contact/>} />
           <Route path="/gallery" element={<Gallery/>} />
           <Route path="/items" element={<Items/>} />
+          <Route path='/product/:key' element={<ProductOverview/>}/>
           <Route path="/*" element={<Error/>}/>
         </Routes>
       </div>

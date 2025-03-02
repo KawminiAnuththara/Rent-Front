@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const ProductCard = ({ item }) => {
   return (
@@ -25,10 +26,10 @@ const ProductCard = ({ item }) => {
         </div>
       </div>
       
-      {/* Add to Cart Button */}
-      <button className="mt-3 w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition">
+      
+      <Link to={"/product/"+item.key} className=" text-center mt-3 w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition">
         Add to Cart
-      </button>
+      </Link>
     </div>
   );
 };
