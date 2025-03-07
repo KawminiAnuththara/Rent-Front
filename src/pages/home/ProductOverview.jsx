@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import ImageSlider from '../../components/ImageSlider';
+import { addToCart, loadCart } from '../../utils/Cart';
 
 const ProductOverview = () => {
     const params = useParams();
@@ -45,6 +46,10 @@ const ProductOverview = () => {
                         <div className='mt-4 text-sm text-gray-600'>
                             <span className='font-medium'>Dimensions:</span>{product.dimensions}
                         </div>
+                        <button className='mt-4 bg-accent text-white px-4 py-2 rounded-md' onClick={()=>{
+                            addToCart(product.key,1);
+                            console.log(loadCart());
+                        }}>Add to Cart</button>
                     </div>
                 </div>
             )}
