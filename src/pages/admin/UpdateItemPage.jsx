@@ -5,81 +5,79 @@ import { useLocation, useNavigate } from "react-router-dom";
 import mediaUpload from "../../utils/MediaUpload";
 
 const UpdateItemsPage = () => {
-
-  const location= useLocation();
+  const location = useLocation();
 
   const [productKey, setProductKey] = useState(location.state.key);
-  const [productName, setProductName] = useState(location.state.key);
+  const [productName, setProductName] = useState(location.state.name);
   const [productPrice, setProductPrice] = useState(location.state.price);
   const [productCategory, setProductCategory] = useState(location.state.category);
   const [productDimension, setProductDimension] = useState(location.state.dimensions);
-  const [productDescription, setProductDescription] = useState(location.state.dimensions);
+  const [productDescription, setProductDescription] = useState(location.state.description);
   const [productAvailability, setProductAvailability] = useState(location.state.availability);
-  const [productImages, setProductImages] = useState(location.state.image); 
+  const [productImages, setProductImages] = useState(location.state.image);
   const navigate = useNavigate();
-  
+
+  // Handle file change
+  const handleImageChange = (e) => {
+    const files = Array.from(e.target.files);  // Convert FileList to an array
+    setProductImages(files);
+  };
 
   async function handleAddItem() {
+    let updatingImages = productImages;
 
-    let updatingImages = location.state.images
-
-    if(productImages.length >0){
+    if (productImages.length > 0) {
       const promises = [];
-
-      for(let i=0; i<productImages.length;i++){
+      for (let i = 0; i < productImages.length; i++) {
         console.log(productImages[i]);
-        const promise = mediaUpload(productImages[i]);
+        const promise = mediaUpload(productImages[i]);  // Ensure mediaUpload function handles this correctly
         promises.push(promise);
       }
 
-      const imageUrls = await Promise.all(promises);
+      try {
+        const imageUrls = await Promise.all(promises); // Wait for all images to upload
+        updatingImages = imageUrls; // Replace with the URLs returned from the upload process
+      } catch (err) {
+        console.error("Error uploading images:", err);
+        toast.error("Failed to upload images.");
+        return;
+      }
     }
-    console.log(
-      productKey,
-      productName,
-      productPrice,
-      productCategory,
-      productDimension,
-      productDescription,
-      productAvailability,
-      productImages
-    );
 
     const token = localStorage.getItem("token");
-    const backendUrl = import.meta.env.VITE_BACKEND_URL
+    const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
     if (token) {
       try {
         const result = await axios.put(
           `${backendUrl}/api/products/${productKey}`,
           {
-            
             name: productName,
             price: productPrice,
             category: productCategory,
-            dimensions: productDimension,  
+            dimensions: productDimension,
             description: productDescription,
             availability: productAvailability,
-            image: updatingImages,  
+            image: updatingImages, // Send the updated image URLs
           },
           {
             headers: {
-              Authorization: "Bearer " + token, // Fixed missing space
+              Authorization: "Bearer " + token, // Authorization header with the token
             },
           }
         );
         toast.success(result.data.message);
         navigate("/admin/items");
       } catch (err) {
-        console.error("Error adding item:", err);
+        console.error("Error updating item:", err);
         if (err.response && err.response.data && err.response.data.error) {
           toast.error(err.response.data.error);
         } else {
-          toast.error("An error occurred while adding the product.");
+          toast.error("An error occurred while updating the product.");
         }
       }
     } else {
-      toast.error("Please login first");
+      toast.error("Please login first.");
     }
   }
 
@@ -106,7 +104,7 @@ const UpdateItemsPage = () => {
           type="number"
           placeholder="Product Price"
           value={productPrice}
-          onChange={(e) => setProductPrice(Number(e.target.value))} // Convert to number
+          onChange={(e) => setProductPrice(Number(e.target.value))}
           className="border p-2 mb-2 w-full"
         />
         <select
@@ -125,7 +123,6 @@ const UpdateItemsPage = () => {
           className="border p-2 mb-2 w-full"
         />
         <textarea
-          type="text"
           placeholder="Product Description"
           value={productDescription}
           onChange={(e) => setProductDescription(e.target.value)}
@@ -142,7 +139,7 @@ const UpdateItemsPage = () => {
         <input
           type="file"
           multiple
-          onChange={(e) => setProductImages([e.target.files])}
+          onChange={handleImageChange}  // Handle image change
           className="border p-2 mb-2 w-full"
         />
         <button

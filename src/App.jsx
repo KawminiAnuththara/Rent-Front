@@ -8,6 +8,8 @@ import LoginPage from './pages/login/LoginPage';
 import { Toaster } from 'react-hot-toast';
 import Register from './pages/register/Register';
 import File from './components/File';
+import Contact from './pages/home/Contact';
+import BookingPage from './pages/home/bookingPage';
 
 const App = () => {
   return (
@@ -19,6 +21,8 @@ const App = () => {
         <Route path='/login' element={<LoginPage/>}/>
         <Route path='/register' element={<Register/>}/>
         <Route path="/admin/*" element={<AdminPage />} />
+        
+        <Route path='/contact' element={<Contact/>}/>
         <Route path="/*" element={<HomePage />} />
       </Routes>
     </BrowserRouter>

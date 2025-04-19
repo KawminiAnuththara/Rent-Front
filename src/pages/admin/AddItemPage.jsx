@@ -11,26 +11,25 @@ const AddItemsPage = () => {
   const [productCategory, setProductCategory] = useState("audio");
   const [productDimension, setProductDimension] = useState("");
   const [productDescription, setProductDescription] = useState("");
-  const [productAvailability, setProductAvailability] = useState(true); // New field for availability
-  const [productImages, setProductImages] = useState([""]);
-  
+  const [productAvailability, setProductAvailability] = useState(true);
+  const [productImages, setProductImages] = useState([]); // Fixed initialization
+
   const navigate = useNavigate();
 
   async function handleAddItem() {
     const promises = [];
-  
+
     // Upload all images
     for (let i = 0; i < productImages.length; i++) {
-      const promise = mediaUpload(productImages[i]);  // Assumes mediaUpload handles file upload
+      const promise = mediaUpload(productImages[i]);
       promises.push(promise);
     }
-  
+
     try {
-      // Wait for all promises to resolve (file uploads)
       const imageUrls = await Promise.all(promises);
       const token = localStorage.getItem("token");
       const backendUrl = import.meta.env.VITE_BACKEND_URL;
-  
+
       if (token) {
         const result = await axios.post(
           `${backendUrl}/api/products`,
@@ -42,17 +41,17 @@ const AddItemsPage = () => {
             dimensions: productDimension,
             description: productDescription,
             availability: productAvailability,
-            image: imageUrls, // Send the image URLs from the file upload responses
+            image: imageUrls,
           },
           {
             headers: {
-              Authorization: "Bearer " + token, // Add token in headers for authorization
+              Authorization: "Bearer " + token,
             },
           }
         );
-  
+
         toast.success(result.data.message);
-        navigate("/admin/items"); // Redirect after successful submission
+        navigate("/admin/items");
       } else {
         toast.error("Please login first");
       }
@@ -65,7 +64,6 @@ const AddItemsPage = () => {
       }
     }
   }
-  
 
   return (
     <div className="w-full h-full flex flex-col items-center">
@@ -89,7 +87,7 @@ const AddItemsPage = () => {
           type="number"
           placeholder="Product Price"
           value={productPrice}
-          onChange={(e) => setProductPrice(Number(e.target.value))} // Convert to number
+          onChange={(e) => setProductPrice(Number(e.target.value))}
           className="border p-2 mb-2 w-full"
         />
         <select
@@ -108,7 +106,6 @@ const AddItemsPage = () => {
           className="border p-2 mb-2 w-full"
         />
         <textarea
-          type="text"
           placeholder="Product Description"
           value={productDescription}
           onChange={(e) => setProductDescription(e.target.value)}
@@ -125,7 +122,7 @@ const AddItemsPage = () => {
         <input
           type="file"
           multiple
-          onChange={(e) => setProductImages([e.target.files])}
+          onChange={(e) => setProductImages(Array.from(e.target.files))} // ✅ FIXED
           className="border p-2 mb-2 w-full"
         />
         <button
@@ -134,7 +131,10 @@ const AddItemsPage = () => {
         >
           Add
         </button>
-        <button onClick={() => { navigate("/admin/items/add") }} className="bg-red-500 text-white p-2 w-full mt-2">
+        <button
+          onClick={() => navigate("/admin/items/add")}
+          className="bg-red-500 text-white p-2 w-full mt-2"
+        >
           Cancel
         </button>
       </div>
