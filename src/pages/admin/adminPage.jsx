@@ -6,6 +6,8 @@ import { Link, Route, Routes } from "react-router-dom";
 import AdminItemPage from "./AdminItemPage";
 import AddItemsPage from "./AddItemPage";
 import UpdateItemPage from "./UpdateItemPage";
+import AdminUsersPage from "./AdminUsersPage";
+import AdminBookingPage from "./AdminBookingPage";
 
 export default function AdminPage(){
     return(
@@ -23,14 +25,15 @@ export default function AdminPage(){
          <MdOutlineAudiotrack />
             Items
          </Link>
-         <button className='w-full h-[40px] text-[20px] font-bold flex justify-center items-center'>
+         <Link to="/admin/users" className='w-full h-[40px] text-[20px] font-bold flex justify-center items-center'>
          <FaRegUser/>
               Users
-         </button>
+         </Link>
       </div>
       <div className='w-[calc(100vw-250px)] '>
          <Routes path="/*">
-           <Route path="/booking" element={<h1>Booking</h1>}/>
+           <Route path="/booking" element={<AdminBookingPage/>}/>
+           <Route path="/users" element={<AdminUsersPage/>}/>
            <Route path="/items" element={<AdminItemPage/>}/>
            <Route path="/item/add" element={<AddItemsPage/>}/>
            <Route path="/item/edit" element={<UpdateItemPage/>}/>
