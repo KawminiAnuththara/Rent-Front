@@ -10,9 +10,12 @@ import Register from './pages/register/Register';
 import File from './components/File';
 import Contact from './pages/home/Contact';
 import BookingPage from './pages/home/bookingPage';
+import { GoogleOAuthProvider } from '@react-oauth/google';
+import VerifyEmail from './pages/verifyEmail/VerifyEmail';
 
 const App = () => {
   return (
+    <GoogleOAuthProvider clientId='315063743738-qvgpe8783i6b7p3bc32bfiv16hl50u1g.apps.googleusercontent.com'>
     <BrowserRouter>
     <Toaster position='top-right'/>
       <Routes>
@@ -21,11 +24,12 @@ const App = () => {
         <Route path='/login' element={<LoginPage/>}/>
         <Route path='/register' element={<Register/>}/>
         <Route path="/admin/*" element={<AdminPage />} />
-        
+        <Route path='/verify-email' element={<VerifyEmail/>}/>
         <Route path='/contact' element={<Contact/>}/>
         <Route path="/*" element={<HomePage />} />
       </Routes>
     </BrowserRouter>
+    </GoogleOAuthProvider>
   );
 };
 
