@@ -17,8 +17,8 @@ export default function Header() {
     className="w-full h-[70px] shadow-2xl flex justify-center items-center relative bg-black text-white">
       
       <div className='text-2xl flex items-center gap-2 font-bold uppercase absolute left-1 font-mono'>
-        <p className='text-pink-700'>Sound</p>
-        <p className='text-accent'>Wave</p>
+        <p className='text-pink-700'>KV</p>
+        <p className='text-accent'>Audio</p>
         <FaMicrophone className='text-yellow-300'/>
       </div>
       <div className='hidden w-[450px] md:flex justify-evenly items-center'>

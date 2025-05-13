@@ -1,8 +1,11 @@
 import React from 'react'
-import pic11 from "/3.webp"
-import pic12 from "/4.png"
-import pic13 from "/5.webp"
-import pic14 from "/6.webp"
+import pic1 from "/3.webp"
+import pic2 from "/4.png"
+import pic3 from "/5.webp"
+import pic4 from "/6.webp"
+
+import { motion } from 'framer-motion'
+import {FadeLeft} from "../assets/utilities/animation"
 
 const MenuData = [
     {
@@ -10,6 +13,8 @@ const MenuData = [
         title :"Lights",
         link:"/gallery",
         img:pic1,
+        price:"Rs 500-Up",
+        delay :0.3
         
     },
     {
@@ -17,6 +22,8 @@ const MenuData = [
         title :"Speakers",
         link:"/gallery",
         img:pic2,
+        price:"Rs 500-Up",
+        delay:0.6
         
     },
     {
@@ -24,6 +31,8 @@ const MenuData = [
         title :"Lights",
         link:"/gallery",
         img:pic3,
+        price:"Rs 500-Up",
+        delay :0.9
         
     },
     {
@@ -31,6 +40,8 @@ const MenuData = [
         title :"Lights",
         link:"/gallery",
         img:pic4,
+        price:"Rs 500-Up",
+        delay :1.2
         
     }
 ]
@@ -38,23 +49,32 @@ const MenuData = [
 const Menu = () => {
   return (
     <div>
-        <h1 className='text-2xl font-bold text-left pb-10 uppercase'>
+        <motion.h1
+        initial={{opacity :0, x:-200}}
+        whileInView={{opacity:1,x:0}}
+        transition={{duration:1 ,delay :0.3}}
+         className='text-2xl font-bold text-left pb-10 uppercase'>
             Rent Item
-        </h1>
-        <div>
+        </motion.h1>
+        <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6'>
             {
                 MenuData.map((menu)=>(
-                    <div>
+                    <motion.div 
+                    variants={FadeLeft(menu.delay)}
+                    initial ="hidden"
+                    whileInView={"visible"}
+                    whileHover={{scale:1.1}}
+                    className='bg-white rounded-3xl px-4 py-2 shadow-[0_0_22px_0_rgba(0,0,0,0.15)] flex flex-row justify-around items-center gap-3'>
                     <img 
                      src={menu.img}
                      alt=''
-                     className='w-[60px] mb-4 scale-125 transform-translate-y-6'
+                     className='w-[60px] mb-4 scale-110 transform translate-y-2'
                     />
                     <div>
-                        <h1>{menu.title}</h1>
-                        <p>{menu.price}</p>
+                        <h1 className='text-lg font-semibold'>{menu.title}</h1>
+                        <p className='text-lg font-semibold text-danger'>{menu.price}</p>
                     </div>
-                    </div>
+                    </motion.div>
                 ))
             }
         </div>
