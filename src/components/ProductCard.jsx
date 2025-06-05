@@ -27,7 +27,7 @@ const ProductCard = ({ item }) => {
       </div>
       
       
-      <Link to={"/product/"+item.key} className=" text-center mt-3 w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition">
+      <Link to={"/product/"+item.key} className='primary-btn  text-center'>
         Add to Cart
       </Link>
     </div>

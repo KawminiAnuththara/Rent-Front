@@ -19,24 +19,20 @@ const Items = () => {
     }
   },[])
   return (
-    <div className='w-full h-full flex flex-wrap justify-center  pt-[50px]'> 
-       {
-        state == "loading" &&
-        <div className='w-full h-full  flex justify-center items-center'>
-           <div className='w-[50px] h-[50px] border-4 rounded-full border-t-green-500 animate-spin'>
+    <div className='w-full min-h-screen bg-amber-50 px-6 py-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8'>
+  {
+    state === "loading" ? (
+      <div className='col-span-full flex justify-center items-center'>
+        <div className='w-[50px] h-[50px] border-4 border-t-green-500 border-gray-300 rounded-full animate-spin'></div>
+      </div>
+    ) : state === "success" ? (
+      items.map((item) => (
+        <ProductCard key={item.key} item={item} />
+      ))
+    ) : null
+  }
+</div>
 
-           </div>
-        </div>
-       }
-       {
-        state=="success"&&
-        items.map((item)=>{
-          return(
-             <ProductCard key={item.key} item={item}/>
-          )
-        })
-       }
-    </div>
   )
 }
 

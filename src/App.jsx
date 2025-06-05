@@ -12,6 +12,7 @@ import Contact from './pages/home/Contact';
 import BookingPage from './pages/home/bookingPage';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import VerifyEmail from './pages/verifyEmail/VerifyEmail';
+import Footer from './pages/home/Footer';
 
 const App = () => {
   return (
@@ -28,6 +29,7 @@ const App = () => {
         <Route path='/contact' element={<Contact/>}/>
         <Route path="/*" element={<HomePage />} />
       </Routes>
+      
     </BrowserRouter>
     </GoogleOAuthProvider>
   );
