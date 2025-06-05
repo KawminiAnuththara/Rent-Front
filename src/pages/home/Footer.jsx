@@ -9,7 +9,7 @@ const Footer = () => {
         
         {/* Brand */}
         <div>
-          <h2 className="text-2xl font-bold mb-2">SoundStage Rentals</h2>
+          <h2 className="text-2xl font-bold mb-2">KV AUDIO</h2>
           <p className="text-sm text-gray-400">Affordable sound equipment and rental services with the best support and performance.</p>
         </div>
 
@@ -45,7 +45,7 @@ const Footer = () => {
 
       {/* Bottom Bar */}
       <div className="text-center text-gray-500 text-sm mt-10 border-t border-gray-700 pt-4">
-        &copy; {new Date().getFullYear()} SoundStage Rentals. All rights reserved.
+        &copy; {new Date().getFullYear()} KV Audio. All rights reserved.
       </div>
     </footer>
   );
